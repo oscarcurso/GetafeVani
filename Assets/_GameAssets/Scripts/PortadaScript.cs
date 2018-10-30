@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PotadaScript : MonoBehaviour {
+public class PortadaScript : MonoBehaviour {
 
     [SerializeField] RectTransform[] rt;
 
@@ -21,7 +21,7 @@ public class PotadaScript : MonoBehaviour {
 
             if ((rt[i].position.x + rt[i].rect.width) < 0) {
 
-                xPos = 1000;
+                xPos = 2000;
             }
 
 
