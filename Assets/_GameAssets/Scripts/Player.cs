@@ -103,7 +103,7 @@ public class Player : MonoBehaviour {
     public void IncrementarVidas(int vidasAIncrementar) {
 
         vidas = vidas + vidasAIncrementar;
-        Renderer.Instantiate(Object Vidas,)
+        //Renderer.Instantiate("Vidas", new Vector3(23, 34, 0), Quaternion rotation);
         print("Hasta aqui llego");
 
     }
