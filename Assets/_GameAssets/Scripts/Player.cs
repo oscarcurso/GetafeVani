@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
     [SerializeField] Text txtPuntuacion;
+    [SerializeField] Image imVidas;
     [SerializeField] float speed = 10;
     Rigidbody2D rb2D;
     [SerializeField] int vidas;
@@ -12,6 +13,8 @@ public class Player : MonoBehaviour {
     [SerializeField] float jumpForce = 50;
     [SerializeField] Transform posPies;
     [SerializeField] float radioOverlap = 0.1f;
+    [SerializeField] LayerMask floorLayer;
+    bool saltando = true;
     int vidasMaximas = 3;
 
 
@@ -21,17 +24,24 @@ public class Player : MonoBehaviour {
         txtPuntuacion.text = "Score: " + puntos.ToString();
     }
 
+    private void Update() {
+        if (Input.GetKey(KeyCode.Space)) {
+
+            saltando = true;
+        }
+    }
 
 
 
     void FixedUpdate() {
 
 
-        float yPos = Input.GetAxis("Vertical");
+        
         float xPos = Input.GetAxis("Horizontal");
         float ySpeedActual = rb2D.velocity.y;
 
-        if (yPos > 0) {
+        if (saltando) {
+            saltando = false;
             if (EstaEnElSuelo()) {
                 rb2D.velocity = new Vector2(xPos * speed, jumpForce);
             } else {
@@ -42,6 +52,18 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private bool EstaEnElSuelo() {
+        bool enSuelo=false;
+        Collider2D col = Physics2D.OverlapCircle(posPies.position, radioOverlap, floorLayer);
+        if(col != null) {
+            enSuelo = true;
+        }
+        return enSuelo;
+    }
+ 
+    
+    /*
+     * Version basada en tag y utilizando overlapcircleall
     private bool EstaEnElSuelo() {
 
         bool enSuelo = false;
@@ -56,7 +78,7 @@ public class Player : MonoBehaviour {
 
 
         return enSuelo;
-    }
+    }*/ 
 
     public void IncrementarPuntuacion(int puntosAIncrementar) {
 
@@ -70,5 +92,19 @@ public class Player : MonoBehaviour {
             IncrementarPuntuacion(1);
             Destroy(collision.gameObject);
         }
+
+        if (collision.gameObject.CompareTag("CajaVida")) {
+
+            IncrementarVidas(1);
+            Destroy(collision.gameObject);
+        }
+    }
+
+    public void IncrementarVidas(int vidasAIncrementar) {
+
+        vidas = vidas + vidasAIncrementar;
+        Renderer.Instantiate(Object Vidas,)
+        print("Hasta aqui llego");
+
     }
 }
