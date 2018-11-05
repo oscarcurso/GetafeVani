@@ -36,9 +36,12 @@ public class Player : MonoBehaviour {
     void FixedUpdate() {
 
 
-        
+
         float xPos = Input.GetAxis("Horizontal");
         float ySpeedActual = rb2D.velocity.y;
+
+
+
 
         if (saltando) {
             saltando = false;
@@ -47,21 +50,24 @@ public class Player : MonoBehaviour {
             } else {
                 rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
             }
-        } else {
-            rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
+        } else if (Mathf.Abs(xPos) > 0.01f) {
+            {
+                rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
+            }
         }
+
     }
 
     private bool EstaEnElSuelo() {
-        bool enSuelo=false;
+        bool enSuelo = false;
         Collider2D col = Physics2D.OverlapCircle(posPies.position, radioOverlap, floorLayer);
-        if(col != null) {
+        if (col != null) {
             enSuelo = true;
         }
         return enSuelo;
     }
- 
-    
+
+
     /*
      * Version basada en tag y utilizando overlapcircleall
     private bool EstaEnElSuelo() {
@@ -78,7 +84,7 @@ public class Player : MonoBehaviour {
 
 
         return enSuelo;
-    }*/ 
+    }*/
 
     public void IncrementarPuntuacion(int puntosAIncrementar) {
 
