@@ -14,6 +14,7 @@ public class Player : MonoBehaviour {
     [SerializeField] Transform posPies;
     [SerializeField] float radioOverlap = 0.1f;
     [SerializeField] LayerMask floorLayer;
+    [SerializeField] GameObject[] corazonVidas;
     bool saltando = true;
     int vidasMaximas = 3;
 
