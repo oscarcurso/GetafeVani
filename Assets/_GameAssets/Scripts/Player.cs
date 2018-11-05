@@ -17,11 +17,14 @@ public class Player : MonoBehaviour {
     [SerializeField] GameObject[] corazonVidas;
     bool saltando = true;
     int vidasMaximas = 3;
+    Animator playerAnimator;
+    bool mirarFrente = true;
 
 
 
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<Animator>();
         txtPuntuacion.text = "Score: " + puntos.ToString();
     }
 
@@ -32,6 +35,17 @@ public class Player : MonoBehaviour {
         }
     }
 
+    void CambiarOrientacion() {
+
+        if (mirarFrente) {
+            transform.localScale = new Vector2(-1, 1);
+        } else {
+            transform.localScale= new Vector2(1, 1);
+
+        }
+        mirarFrente = !mirarFrente;
+    }
+
 
 
     void FixedUpdate() {
@@ -40,6 +54,14 @@ public class Player : MonoBehaviour {
 
         float xPos = Input.GetAxis("Horizontal");
         float ySpeedActual = rb2D.velocity.y;
+
+        if(Mathf.Abs(xPos)> 0.01f){
+            playerAnimator.SetBool("Andando", true);
+           
+        } else{
+            playerAnimator.SetBool("Andando", false);
+           
+        }
 
 
 
@@ -55,6 +77,12 @@ public class Player : MonoBehaviour {
             {
                 rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
             }
+        }
+
+        if (mirarFrente && xPos < -0.01) {
+            CambiarOrientacion();
+        }else if (!mirarFrente && xPos > 0.01) {
+            CambiarOrientacion();
         }
 
     }
