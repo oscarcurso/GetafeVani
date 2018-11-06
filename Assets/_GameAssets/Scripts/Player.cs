@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
 
     [SerializeField] Image barraDeVida;
     [SerializeField] Text txtPuntuacion;
-    [SerializeField] Image imVidas;
+    
     [SerializeField] float speed = 10;
     Rigidbody2D rb2D;
     [SerializeField] int vidas;
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour {
     int vidasMaximas = 3;
     Animator playerAnimator;
     bool mirarFrente = true;
-    float vida = 1;
+    float vida = 10;
 
     public int fuerzaimpactoX = 5;
     public int fuerzaImpactoY = 5;

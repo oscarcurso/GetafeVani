@@ -378,9 +378,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d802a6a0dc0b9cb4abaad140cb75d26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  barraDeVida: {fileID: 0}
+  barraDeVida: {fileID: 1453528888}
   txtPuntuacion: {fileID: 16426558}
-  imVidas: {fileID: 0}
   speed: 5
   vidas: 0
   puntos: 0
