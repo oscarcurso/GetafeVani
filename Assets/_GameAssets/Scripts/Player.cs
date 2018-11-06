@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
+    enum EstadoPlayer { Pausa, Parado, AndandoDer, AndandoIzq, Saltando, Sufriendo };
+    EstadoPlayer estado = EstadoPlayer.Parado;
+
+    [SerializeField] Image barraDeVida;
     [SerializeField] Text txtPuntuacion;
     [SerializeField] Image imVidas;
     [SerializeField] float speed = 10;
@@ -15,23 +19,39 @@ public class Player : MonoBehaviour {
     [SerializeField] float radioOverlap = 0.1f;
     [SerializeField] LayerMask floorLayer;
     [SerializeField] GameObject[] corazonVidas;
-    bool saltando = true;
+    int saludMaxima = 100;
+    [SerializeField] int salud;
     int vidasMaximas = 3;
     Animator playerAnimator;
     bool mirarFrente = true;
+    float vida = 1;
 
+    public int fuerzaimpactoX = 5;
+    public int fuerzaImpactoY = 5;
 
+    private void Awake() {
+        vidas = vidasMaximas;
+        salud = saludMaxima;
+    }
 
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
         txtPuntuacion.text = "Score: " + puntos.ToString();
+        
+       
     }
 
     private void Update() {
+        vida -= 0.0f;
+        barraDeVida.fillAmount = vida;
+
         if (Input.GetKey(KeyCode.Space)) {
 
-            saltando = true;
+            estado = EstadoPlayer.Saltando;
+        }
+        if (estado == EstadoPlayer.Sufriendo && EstaEnElSuelo()) {
+            estado = EstadoPlayer.Pausa;
         }
     }
 
@@ -40,7 +60,7 @@ public class Player : MonoBehaviour {
         if (mirarFrente) {
             transform.localScale = new Vector2(-1, 1);
         } else {
-            transform.localScale= new Vector2(1, 1);
+            transform.localScale = new Vector2(1, 1);
 
         }
         mirarFrente = !mirarFrente;
@@ -55,33 +75,46 @@ public class Player : MonoBehaviour {
         float xPos = Input.GetAxis("Horizontal");
         float ySpeedActual = rb2D.velocity.y;
 
-        if(Mathf.Abs(xPos)> 0.01f){
+        if (estado == EstadoPlayer.Sufriendo) {
+            return;
+        }
+
+        if (Mathf.Abs(xPos) > 0.01f) {
             playerAnimator.SetBool("Andando", true);
-           
-        } else{
+
+        } else {
             playerAnimator.SetBool("Andando", false);
-           
+
         }
 
 
 
 
-        if (saltando) {
-            saltando = false;
+        if (estado == EstadoPlayer.Saltando) {
+            estado = EstadoPlayer.Pausa;
             if (EstaEnElSuelo()) {
                 rb2D.velocity = new Vector2(xPos * speed, jumpForce);
             } else {
                 rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
             }
-        } else if (Mathf.Abs(xPos) > 0.01f) {
+        } else if (xPos > 0.01f) {
             {
                 rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
+                estado = EstadoPlayer.AndandoDer;
             }
+        } else if (xPos < -0.01f) {
+
+            rb2D.velocity = new Vector2(xPos * speed, ySpeedActual);
+            estado = EstadoPlayer.AndandoIzq;
         }
+
+
+
+
 
         if (mirarFrente && xPos < -0.01) {
             CambiarOrientacion();
-        }else if (!mirarFrente && xPos > 0.01) {
+        } else if (!mirarFrente && xPos > 0.01) {
             CambiarOrientacion();
         }
 
@@ -141,5 +174,32 @@ public class Player : MonoBehaviour {
         //Renderer.Instantiate("Vidas", new Vector3(23, 34, 0), Quaternion rotation);
         print("Hasta aqui llego");
 
+    }
+    public void Recibirdanyo(int danyo) {
+       
+        salud = salud - danyo;
+
+        if (salud <= 0) {
+            
+            vidas--;
+            salud = saludMaxima;
+        }
+
+        if (estado == EstadoPlayer.AndandoDer) {
+            estado = EstadoPlayer.Sufriendo;
+            GetComponent<Rigidbody2D>().AddRelativeForce(
+            new Vector2(-fuerzaimpactoX, fuerzaImpactoY), ForceMode2D.Impulse);
+        } else if (estado == EstadoPlayer.AndandoIzq) {
+
+            estado = EstadoPlayer.Sufriendo;
+            GetComponent<Rigidbody2D>().AddRelativeForce(
+           new Vector2(fuerzaimpactoX, fuerzaImpactoY), ForceMode2D.Impulse);
+        }
+        
+    }
+
+
+    public int GetVidas() {
+        return this.vidas;
     }
 }
