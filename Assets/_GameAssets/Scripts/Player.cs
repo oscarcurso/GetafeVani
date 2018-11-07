@@ -7,9 +7,9 @@ public class Player : MonoBehaviour {
     enum EstadoPlayer { Pausa, Parado, AndandoDer, AndandoIzq, Saltando, Sufriendo };
     EstadoPlayer estado = EstadoPlayer.Parado;
 
-    [SerializeField] Image barraDeVida;
+  
     [SerializeField] Text txtPuntuacion;
-    
+    [SerializeField] Text txtSalud;
     [SerializeField] float speed = 10;
     Rigidbody2D rb2D;
     [SerializeField] int vidas;
@@ -21,13 +21,14 @@ public class Player : MonoBehaviour {
     [SerializeField] GameObject[] corazonVidas;
     int saludMaxima = 100;
     [SerializeField] int salud;
-    int vidasMaximas = 3;
+    int vidasMaximas = 5;
     Animator playerAnimator;
     bool mirarFrente = true;
-    float vida = 10;
+   
 
     public int fuerzaimpactoX = 5;
     public int fuerzaImpactoY = 5;
+    public UIScript uiScript;
 
     private void Awake() {
         vidas = vidasMaximas;
@@ -38,13 +39,14 @@ public class Player : MonoBehaviour {
         rb2D = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
         txtPuntuacion.text = "Score: " + puntos.ToString();
+        txtSalud.text = "Salud: " + salud.ToString();
+
         
        
     }
 
     private void Update() {
-        vida -= 0.0f;
-        barraDeVida.fillAmount = vida;
+       
 
         if (Input.GetKey(KeyCode.Space)) {
 
@@ -177,12 +179,15 @@ public class Player : MonoBehaviour {
     }
     public void Recibirdanyo(int danyo) {
        
+
         salud = salud - danyo;
 
         if (salud <= 0) {
             
             vidas--;
             salud = saludMaxima;
+            uiScript.RestarVida();
+
         }
 
         if (estado == EstadoPlayer.AndandoDer) {
@@ -196,6 +201,12 @@ public class Player : MonoBehaviour {
            new Vector2(fuerzaimpactoX, fuerzaImpactoY), ForceMode2D.Impulse);
         }
         
+    }
+
+    public void RecibirSalud(int incrementoSalud) {
+        salud = salud + incrementoSalud;
+        salud = Mathf.Min(salud, saludMaxima); // igual que un if para que coja el valor menor
+       
     }
 
 
