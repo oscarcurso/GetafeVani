@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MoscaScript : MonoBehaviour {
+
+    Slider slider;
     public Transform limiteDerecho;
     public Transform limiteIzquierdo;
 
@@ -10,6 +13,8 @@ public class MoscaScript : MonoBehaviour {
 
     private void Start() {
         transform.position = limiteDerecho.position;
+        slider = GetComponentInChildren<Slider>();
+        QuitarVida(50);
     }
 
     // Update is called once per frame
@@ -37,6 +42,12 @@ public class MoscaScript : MonoBehaviour {
         } else {
             transform.localScale = new Vector2(1, 1);
         }
+    }
+
+
+    private void QuitarVida(int vida) {
+
+        slider.value = slider.value - vida;
     }
 
     
